@@ -1,0 +1,7 @@
+[
+  {
+    "op": "add",
+    "path": "/genericScriptContexts/aikiro42-interpolating-camera",
+    "value": "/scripts/player/interpolating-camera.lua"
+  }
+]
