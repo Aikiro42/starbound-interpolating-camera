@@ -16,7 +16,8 @@ function init()
   self.hasStarExtensions = _ENV.starExtensions ~= nil
   
   -- chase cam
-  self.targetPos = mcontroller.position()
+  self.chaseCamPos = mcontroller.position()
+  self.chaseCamSpeed = {0, 0}
   
   -- cursor offset
   self.targetOffset = {0, 0}
@@ -43,8 +44,8 @@ function update(dt)
     else
       -- main process
       if self.enableChaseCam then
-        updateChaseCam()
-        local chaseCamOffset = getOffset()
+        updateChaseCam(dt)
+        local chaseCamOffset = getOffset(self.chaseCamPos)
         camera.override(chaseCamOffset, 0, {type="additive", influence=1})
       end
       
@@ -75,21 +76,10 @@ function updatePlayerVelocity(dt)
   self.playerVelocity = vec2.mul(speedNorm, 1/dt)
 end
 
-function updateChaseCam()
-  local playerPos = mcontroller.position()
-
-  local x = math.max(playerSpeed() - self.invertSpeedThreshold, 0) * 0.01
-  local mult = 4*math.atan(x)
-  local addVector = vec2.mul(vec2.norm(playerVelocity()), mult)
-  local targetPos = vec2.add(self.targetPos, addVector)
-  local interpPos = vec2.add(playerPos, addVector)
-  local newCamPos = lerp(
-    self.lerpSpeed,
-    targetPos,
-    interpPos
-  )
-    
-  self.targetPos = newCamPos
+function updateChaseCam(dt)
+  local targetSpeed = playerVelocity()
+  self.chaseCamSpeed = lerp(self.lerpSpeed, self.chaseCamSpeed, targetSpeed)
+  self.chaseCamPos = vec2.add(self.chaseCamPos, vec2.mul(self.chaseCamSpeed, dt))
 end
 
 function updateCursorCamOffset()
@@ -139,7 +129,7 @@ end
 
 function getOffset(pos)
   local playerPos = mcontroller.position()
-  local offset = world.distance(pos or self.targetPos, playerPos)
+  local offset = world.distance(pos, playerPos)
   return offset
 end
 
