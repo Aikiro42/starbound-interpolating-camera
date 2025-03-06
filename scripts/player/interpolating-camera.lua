@@ -6,21 +6,20 @@ function print(s)
 end
 
 function init()
+
+  local settings = root.assetJson('/configs/interpolating-camera.config')
+
+  for k, v in pairs(settings) do
+    self[k] = v
+  end
   
   self.hasStarExtensions = _ENV.starExtensions ~= nil
   
-  self.enableInterpCam = true
-  self.enableCursorOffset = true
-
-  -- interp cam
-  self.lerpSpeed = 0.1
+  -- chase cam
   self.targetPos = mcontroller.position()
   
   -- cursor offset
-  self.offsetLerpSpeedMult = 0.5
   self.targetOffset = {0, 0}
-  self.maxCamDistance = 5
-  self.cursorOffsetIntensity = 1
   
   self.loadTimer = 0.1
   if self.hasStarExtensions then
@@ -39,7 +38,7 @@ function update(dt)
       self.loadTimer = -1
     else
       -- main process
-      if self.enableInterpCam then
+      if self.enableChaseCam then
         updateTargetPos()
         camera.override(getOffset(), 0, {type="additive", influence=1})
       end
