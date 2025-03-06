@@ -2,6 +2,6 @@
   {
     "op": "add",
     "path": "/genericScriptContexts/aikiro42-interpolating-camera",
-    "value": "/scripts/player/interpolating-camera.lua"
+    "value": "/scripts/player/aikiro42-interpolating-camera.lua"
   }
 ]

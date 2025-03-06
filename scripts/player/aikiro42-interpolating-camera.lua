@@ -7,7 +7,7 @@ end
 
 function init()
 
-  local settings = root.assetJson('/configs/interpolating-camera.config')
+  local settings = root.assetJson('/configs/aikiro42-interpolating-camera.config')
 
   for k, v in pairs(settings) do
     self[k] = v
